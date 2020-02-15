@@ -39,7 +39,7 @@ entity debouncing is
 end debouncing;
 
 architecture Structural of debouncing is
-    signal signal_clk_int : STD_LOGIC :='0';  --segnale interno per prendere il clock in uscita dal clock filter
+
     signal signal_n_reset : STD_LOGIC :='0';  --segnale interno per passare il reset negato al clock filter
     
     component FlipFlop_D_reset is
@@ -54,7 +54,7 @@ begin
       
       ffd : FlipFlop_D_reset Port map(
                        D => button,
-                       clk => signal_clk_int,
+                       clk => clk,
                        reset => reset,
                        Q => button_result
                        );            
