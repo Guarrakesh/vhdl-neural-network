@@ -139,9 +139,15 @@ architecture Behavioral of NeuralNetworkOnBoard is
            button_result : out STD_LOGIC);
     end component;
     
+    component btn_enabler is
+    Port ( btn_in : in STD_LOGIC;
+           clk : in STD_LOGIC;
+           btn_out : out STD_LOGIC);
+    end component;
+    
     
     -- internal signals for clock
-    signal clockDisplay: std_logic := '0';
+    signal clockDebouncing: std_logic := '0';
     signal clockComponents: std_logic := '0';
     
     -- internal signals for inputManager
@@ -159,6 +165,7 @@ architecture Behavioral of NeuralNetworkOnBoard is
     signal internalOutputIndex: std_logic_vector(2 downto 0) := (others => '0');
 
     signal internalButton: std_logic := '0';
+    signal internalButtonFixed: std_logic := '0';
     
 begin
 
@@ -171,23 +178,30 @@ begin
     port map (
         clock_in => clock,
         reset => reset,
-        clockOutDebouncing => clockDisplay,
+        clockOutDebouncing => clockDebouncing,
         clockOutComponents => clockComponents
     );
     
     debouncingComponent: debouncing
         Port map ( 
             button => buttonEnable,
-            clk => clock,
+            clk => clockDebouncing,
             reset => internalReset,
             button_result => internalButton
+     );
+     
+     buttonEnabler: btn_enabler
+     Port map ( 
+            btn_in => internalButton,
+            clk => clockComponents,
+            btn_out => internalButtonFixed
      );
     
     inputManagerComponent: InputManager 
         Port map (
               clock => clockComponents,
               reset => internalReset, 
-              buttonEnable => internalButton,                         -- Enabled for each input
+              buttonEnable => internalButtonFixed,                         -- Enabled for each input
               enableNetwork => internalEnableNetwork,                 -- Enabled when all input are loaded
               countValue => internalCountValue,                        -- CounterValue to access input index
               input => input,                                           -- Actual input
@@ -207,7 +221,7 @@ begin
       Port map (
             clock => clockComponents,
             resetEnable => reset,                       -- Brings into start state
-            buttonEnable => internalButton,               -- Loads input
+            buttonEnable => internalButtonFixed,               -- Loads input
             counter => internalCountValue,              -- Input counter
             --networkDone: in STD_LOGIC;
             reset => internalReset,                     -- Reset
