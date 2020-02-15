@@ -69,28 +69,28 @@ architecture Behavioral of NeuralNetworkOnBoard is
                counter : out  STD_LOGIC_VECTOR (3 downto 0));
     end component;
     
---    component DisplayManager is
---        Port (
---            enable : in std_logic; 
---            input : in std_logic_vector(2 downto 0);
---            anodes : out  STD_LOGIC_VECTOR (7 downto 0);
---            cathodes : out  STD_LOGIC_VECTOR (7 downto 0)
---        );
---    end component;
-    
-    component display_seven_segments is
-	Generic( 
-				clock_frequency_in : integer := 100000000; --parametri da customizzare, questo � il valore di default
-				clock_frequency_out : integer := 1000000
-				);
-    Port ( clock : in  STD_LOGIC;
-           reset_n : in  STD_LOGIC;
-           value : in  STD_LOGIC_VECTOR (31 downto 0);
-           enable : in  STD_LOGIC_VECTOR (7 downto 0);
-           dots : in  STD_LOGIC_VECTOR (7 downto 0);
-           anodes : out  STD_LOGIC_VECTOR (7 downto 0);
-           cathodes : out  STD_LOGIC_VECTOR (7 downto 0));
+    component DisplayManager is
+        Port (
+            enable : in std_logic; 
+            input : in std_logic_vector(2 downto 0);
+            anodes : out  STD_LOGIC_VECTOR (7 downto 0);
+            cathodes : out  STD_LOGIC_VECTOR (7 downto 0)
+        );
     end component;
+    
+--    component display_seven_segments is
+--	Generic( 
+--				clock_frequency_in : integer := 100000000; --parametri da customizzare, questo � il valore di default
+--				clock_frequency_out : integer := 1000000
+--				);
+--    Port ( clock : in  STD_LOGIC;
+--           reset_n : in  STD_LOGIC;
+--           value : in  STD_LOGIC_VECTOR (31 downto 0);
+--           enable : in  STD_LOGIC_VECTOR (7 downto 0);
+--           dots : in  STD_LOGIC_VECTOR (7 downto 0);
+--           anodes : out  STD_LOGIC_VECTOR (7 downto 0);
+--           cathodes : out  STD_LOGIC_VECTOR (7 downto 0));
+--    end component;
     
     component InputManager is
         Port (
@@ -114,12 +114,12 @@ architecture Behavioral of NeuralNetworkOnBoard is
     component clock_filter is
     	 generic(
     				clock_frequency_in : integer := 100000000;
-    				clock_frequency_out_display : integer := 1;
+    				clock_frequency_out_debouncing : integer := 100;
     				clock_frequency_out_components : integer := 1
     				);
         Port ( clock_in : in  STD_LOGIC;
     		   reset : in STD_LOGIC;
-               clockOutDisplay : out  STD_LOGIC;
+               clockOutDebouncing : out  STD_LOGIC;
                clockOutComponents : out std_logic
                );
 
@@ -130,6 +130,13 @@ architecture Behavioral of NeuralNetworkOnBoard is
         inputArray : in ByteArray;
         outputValue: out ArrayLayerOutput
       );
+    end component;
+    
+    component debouncing is
+    Port ( button : in STD_LOGIC;
+           clk : in STD_LOGIC;
+           reset : in STD_LOGIC;
+           button_result : out STD_LOGIC);
     end component;
     
     
@@ -150,37 +157,37 @@ architecture Behavioral of NeuralNetworkOnBoard is
     signal internalNetworkOutput: ArrayLayerOutput;
     
     signal internalOutputIndex: std_logic_vector(2 downto 0) := (others => '0');
-    
-    signal notReset: std_logic := '0';
-    signal valueForDisplay: std_logic_vector(31 downto 0);
-    signal enableForDisplay: std_logic_vector(7 downto 0);
 
+    signal internalButton: std_logic := '0';
     
 begin
 
-    notReset <= not reset;
-    valueForDisplay <= "00000000000000000000000000000" & internalOutputIndex;
-    enableForDisplay <= "0000000" & internalDisplayEnabler;
 
     clockFilter: clock_filter generic map (
         clock_frequency_in => 100000000,
-    	clock_frequency_out_display => 1000,
+    	clock_frequency_out_debouncing => 100,
     	clock_frequency_out_components => 10000
     )
     port map (
         clock_in => clock,
         reset => reset,
-        clockOutDisplay => clockDisplay,
+        clockOutDebouncing => clockDisplay,
         clockOutComponents => clockComponents
     );
     
-    
+    debouncingComponent: debouncing
+        Port map ( 
+            button => buttonEnable,
+            clk => clock,
+            reset => internalReset,
+            button_result => internalButton
+     );
     
     inputManagerComponent: InputManager 
         Port map (
               clock => clockComponents,
               reset => internalReset, 
-              buttonEnable => buttonEnable,                         -- Enabled for each input
+              buttonEnable => internalButton,                         -- Enabled for each input
               enableNetwork => internalEnableNetwork,                 -- Enabled when all input are loaded
               countValue => internalCountValue,                        -- CounterValue to access input index
               input => input,                                           -- Actual input
@@ -200,7 +207,7 @@ begin
       Port map (
             clock => clockComponents,
             resetEnable => reset,                       -- Brings into start state
-            buttonEnable => buttonEnable,               -- Loads input
+            buttonEnable => internalButton,               -- Loads input
             counter => internalCountValue,              -- Input counter
             --networkDone: in STD_LOGIC;
             reset => internalReset,                     -- Reset
@@ -223,27 +230,13 @@ begin
             output => internalOutputIndex
      );
      
---     displayManagerComponent: DisplayManager
---        Port map (
---            enable => internalDisplayEnabler,
---            input => internalOutputIndex,
---            anodes => anodes,
---            cathodes => cathodes
---        );
-
-    displayManagerComponent: display_seven_segments
-	Generic map ( 
-				clock_frequency_in => 100000000, --parametri da customizzare, questo � il valore di default
-				clock_frequency_out => 1000
-				)
-    Port map ( clock => clockDisplay,
-               reset_n => notReset,
-               value => valueForDisplay,
-                enable => enableForDisplay,
-                dots => (others => '0'),
-                anodes => anodes,
-                cathodes => cathodes
-           );
+     displayManagerComponent: DisplayManager
+        Port map (
+            enable => internalDisplayEnabler,
+            input => internalOutputIndex,
+            anodes => anodes,
+            cathodes => cathodes
+        );
 
 
       

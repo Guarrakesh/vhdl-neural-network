@@ -32,12 +32,12 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity clock_filter is
 	 generic(
 				clock_frequency_in : integer := 100000000;
-				clock_frequency_out_display : integer := 1;
+				clock_frequency_out_debouncing : integer := 100;
 				clock_frequency_out_components : integer := 1
 				);
     Port ( clock_in : in  STD_LOGIC;
 		   reset : in STD_LOGIC;
-           clockOutDisplay : out  STD_LOGIC;
+           clockOutDebouncing : out  STD_LOGIC;
            clockOutComponents : out std_logic
            );
            
@@ -45,31 +45,31 @@ end clock_filter;
 
 architecture Behavioral of clock_filter is
 
-signal clockfxDisplay : std_logic := '0';
 signal clockfxComponents : std_logic := '0';
+signal clockfxDebouncing : std_logic := '0';
 
-constant count_max_value_display : integer := clock_frequency_in/(clock_frequency_out_display)-1;
+constant count_max_value_debouncing : integer := clock_frequency_in/(clock_frequency_out_debouncing)-1;
 constant count_max_value_components : integer := clock_frequency_in/(clock_frequency_out_components)-1;
 
 begin
 
 clockOutComponents <= clockfxComponents;
-clockOutDisplay <= clockfxDisplay;
+clockOutDebouncing <= clockfxDebouncing;
 
 
 count_for_division: process(clock_in, reset)
-    variable counter : integer range 0 to count_max_value_display := 0;
+    variable counter : integer range 0 to count_max_value_debouncing := 0;
 begin
 
 	if reset = '1' then
 		counter := 0;
-		clockfxDisplay <= '0';
+		clockfxDebouncing <= '0';
 	elsif clock_in'event and clock_in = '1' then
-		if counter = count_max_value_display then
-			clockfxDisplay <=  '1';
+		if counter = count_max_value_debouncing then
+			clockfxDebouncing <=  '1';
 			counter := 0;
 		else
-			clockfxDisplay <=  '0';
+			clockfxDebouncing <=  '0';
 			counter := counter + 1;
 		end if;
 	end if;
@@ -85,7 +85,7 @@ begin
 		counter := 0;
 		clockfxComponents <= '0';
 	elsif clock_in'event and clock_in = '1' then
-		if counter = count_max_value_display then
+		if counter = count_max_value_components then
 			clockfxComponents <=  '1';
 			counter := 0;
 		else
