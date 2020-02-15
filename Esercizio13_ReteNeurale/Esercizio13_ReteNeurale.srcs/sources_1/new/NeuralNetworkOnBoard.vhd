@@ -1,0 +1,218 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 02/15/2020 11:33:55 AM
+-- Design Name: 
+-- Module Name: NeuralNetworkOnBoard - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+USE IEEE.std_logic_arith.all;
+
+use work.defs.all;
+
+entity NeuralNetworkOnBoard is
+   Port ( 
+        clock: in std_logic;
+        reset: in std_logic;
+        buttonEnable: in std_logic;
+        input: in std_logic_vector(7 downto 0);
+        anodes : out  STD_LOGIC_VECTOR (7 downto 0);
+        cathodes : out  STD_LOGIC_VECTOR (7 downto 0)
+   );
+end NeuralNetworkOnBoard;
+
+architecture Behavioral of NeuralNetworkOnBoard is
+
+    component ControlUnit is
+      Port (
+        clock: in STD_LOGIC;
+        resetEnable: in STD_LOGIC;                 -- Brings into start state
+        buttonEnable: in STD_LOGIC;                -- Loads input
+        counter: in std_logic_vector(3 downto 0);  -- Input counter
+        --networkDone: in STD_LOGIC;
+        reset          : out std_logic;            -- Reset
+        count          : out std_logic;            -- Count signal
+        enableNetwork  : out std_logic;            -- Bit triggers neural network calculation
+        terminate      : out std_logic             -- Bit high when max value is calculated and cycle is finished (can enable display or LED)
+       );
+    end component;
+    
+    component CounterMod16 is
+        Port ( clock : in  STD_LOGIC;
+               reset : in  STD_LOGIC;
+    		   count : in STD_LOGIC;
+               counter : out  STD_LOGIC_VECTOR (3 downto 0));
+    end component;
+    
+    component DisplayManager is
+        Port (
+            enable : in std_logic; 
+            input : in std_logic_vector(2 downto 0);
+            anodes : out  STD_LOGIC_VECTOR (7 downto 0);
+            cathodes : out  STD_LOGIC_VECTOR (7 downto 0)
+        );
+    end component;
+    
+    component InputManager is
+        Port (
+              clock: in std_logic;
+              reset: in std_logic; 
+              buttonEnable: in std_logic;                   -- Enabled for each input
+              enableNetwork: in std_logic;                  -- Enabled when all input are loaded
+              countValue: in std_logic_vector(3 downto 0);  -- CounterValue to access input index
+              input: in std_logic_vector(7 downto 0);       -- Actual input
+              networkInput: out ByteArray                   -- Array to be sent to Neural Network
+        );
+    end component;
+    
+    component Max is
+          Port ( 
+                input: in ArrayLayerOutput;
+                output: out std_logic_vector(2 downto 0)
+          );
+    end component;
+    
+    component clock_filter is
+    	 generic(
+    				clock_frequency_in : integer := 100000000;
+    				clock_frequency_out_display : integer := 1;
+    				clock_frequency_out_components : integer := 1
+    				);
+        Port ( clock_in : in  STD_LOGIC;
+    		   reset : in STD_LOGIC;
+               --clockOutDisplay : out  STD_LOGIC;
+               clockOutComponents : out std_logic
+               );
+
+    end component;
+    
+    component Network is
+      Port ( 
+        inputArray : in ByteArray;
+        outputValue: out ArrayLayerOutput
+      );
+    end component;
+    
+    
+    -- internal signals for clock
+    --signal clockDisplay: std_logic := '0';
+    signal clockComponents: std_logic := '0';
+    
+    -- internal signals for inputManager
+    signal internalEnableNetwork: std_logic := '0';
+    signal internalCountValue: std_logic_vector(3 downto 0) := (others => '0');
+    signal internalNetworkInput: ByteArray := (others => (others => '0'));
+    
+    -- internal signals for counter
+    signal internalReset: std_logic := '0';
+    signal internalCount: std_logic := '0';
+    
+    signal internalDisplayEnabler: std_logic := '0';
+    signal internalNetworkOutput: ArrayLayerOutput;
+    
+    signal internalOutputIndex: std_logic_vector(2 downto 0) := (others => '0');
+    
+
+    
+begin
+
+    clockFilter: clock_filter generic map (
+        clock_frequency_in => 100000000,
+    	clock_frequency_out_display => 1000,
+    	clock_frequency_out_components => 10000
+    )
+    port map (
+        clock_in => clock,
+        reset => reset,
+        --clockOutDisplay => clockDisplay,
+        clockOutComponents => clockComponents
+    );
+    
+    
+    
+    inputManagerComponent: InputManager 
+        Port map (
+              clock => clockComponents,
+              reset => internalReset, 
+              buttonEnable => buttonEnable,                         -- Enabled for each input
+              enableNetwork => internalEnableNetwork,                 -- Enabled when all input are loaded
+              countValue => internalCountValue,                        -- CounterValue to access input index
+              input => input,                                           -- Actual input
+              networkInput => internalNetworkInput                   -- Array to be sent to Neural Network
+        );
+        
+     
+     counterComponent: CounterMod16
+        Port map(
+             clock => clockComponents,
+             reset => internalReset,
+    		 count => internalCount,
+             counter => internalCountValue
+    );
+    
+     controlUnitComponent: ControlUnit
+      Port map (
+            clock => clockComponents,
+            resetEnable => reset,                       -- Brings into start state
+            buttonEnable => buttonEnable,               -- Loads input
+            counter => internalCountValue,              -- Input counter
+            --networkDone: in STD_LOGIC;
+            reset => internalReset,                     -- Reset
+            count => internalCount,                     -- Count signal
+            enableNetwork => internalEnableNetwork,     -- Bit triggers neural network calculation
+            terminate => internalDisplayEnabler         -- Bit high when max value is calculated and cycle is finished (can enable display or LED)
+       );
+       
+       
+     neuralNetworkComponent: Network
+        Port map ( 
+            inputArray => internalNetworkInput,
+            outputValue => internalNetworkOutput
+     );
+      
+      
+     maxComponent: Max
+        Port map ( 
+            input => internalNetworkOutput,
+            output => internalOutputIndex
+     );
+     
+     displayManagerComponent: DisplayManager
+        Port map (
+            enable => internalDisplayEnabler,
+            input => internalOutputIndex,
+            anodes => anodes,
+            cathodes => cathodes
+        );
+      
+      
+    
+    
+    
+
+end Behavioral;

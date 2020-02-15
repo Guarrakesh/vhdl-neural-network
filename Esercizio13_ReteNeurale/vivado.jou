@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2019.2 (64-bit)
+# SW Build 2708876 on Wed Nov  6 21:40:23 MST 2019
+# IP Build 2700528 on Thu Nov  7 00:09:20 MST 2019
+# Start of session at: Thu Feb 13 22:53:37 2020
+# Process ID: 3848
+# Current directory: C:/Users/dario/Desktop/ASE/Esercizio13_ReteNeurale
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent1524 C:\Users\dario\Desktop\ASE\Esercizio13_ReteNeurale\Esercizio13_ReteNeurale.xpr
+# Log file: C:/Users/dario/Desktop/ASE/Esercizio13_ReteNeurale/vivado.log
+# Journal file: C:/Users/dario/Desktop/ASE/Esercizio13_ReteNeurale\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/dario/Desktop/ASE/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.xpr
+update_compile_order -fileset sources_1
+add_files -norecurse -scan_for_includes C:/Users/dario/Downloads/MicroROM.vhd
+update_compile_order -fileset sources_1
+add_files -norecurse -scan_for_includes C:/Users/dario/Desktop/defs.vhd
+update_compile_order -fileset sources_1
+export_ip_user_files -of_objects  [get_files C:/Users/dario/Desktop/ASE/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/imports/Desktop/defs.vhd] -no_script -reset -force -quiet
+remove_files  C:/Users/dario/Desktop/ASE/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/imports/Desktop/defs.vhd
+file mkdir C:/Users/dario/Desktop/ASE/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/new
+close [ open C:/Users/dario/Desktop/ASE/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/new/ControlUnit.vhd w ]
+add_files C:/Users/dario/Desktop/ASE/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/new/ControlUnit.vhd
+update_compile_order -fileset sources_1

@@ -1,0 +1,36 @@
+Vivado Simulator 2019.2
+Copyright 1986-1999, 2001-2019 Xilinx, Inc. All Rights Reserved.
+Running: /tools/Xilinx/Vivado/2019.2/bin/unwrapped/lnx64.o/xelab -wto 9343e6c614e94ad39fa687145ce14850 --incr --debug typical --relax --mt 8 -L xil_defaultlib -L secureip --snapshot tb2_behav xil_defaultlib.tb2 -log elaborate.log 
+Using 8 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.std_logic_arith
+Compiling package xil_defaultlib.defs
+Compiling architecture behavioural of entity xil_defaultlib.HiddenLayerNeuron [\HiddenLayerNeuron(bias=-8,weigh...]
+Compiling architecture behavioural of entity xil_defaultlib.HiddenLayerNeuron [\HiddenLayerNeuron(bias=2,weight...]
+Compiling architecture behavioural of entity xil_defaultlib.HiddenLayerNeuron [\HiddenLayerNeuron(bias=-14,weig...]
+Compiling architecture behavioural of entity xil_defaultlib.HiddenLayerNeuron [\HiddenLayerNeuron(bias=-2,weigh...]
+Compiling architecture behavioural of entity xil_defaultlib.HiddenLayerNeuron [\HiddenLayerNeuron(bias=-8,weigh...]
+Compiling architecture behavioural of entity xil_defaultlib.HiddenLayerNeuron [\HiddenLayerNeuron(bias=6,weight...]
+Compiling architecture behavioural of entity xil_defaultlib.HiddenLayerNeuron [\HiddenLayerNeuron(bias=-11,weig...]
+Compiling architecture behavioural of entity xil_defaultlib.HiddenLayerNeuron [\HiddenLayerNeuron(bias=-5,weigh...]
+Compiling architecture behavioural of entity xil_defaultlib.HiddenLayerNeuron [\HiddenLayerNeuron(bias=-9,weigh...]
+Compiling architecture behavioural of entity xil_defaultlib.HiddenLayerNeuron [\HiddenLayerNeuron(bias=14,weigh...]
+Compiling architecture structural of entity xil_defaultlib.HiddenLayer [hiddenlayer_default]
+Compiling architecture behavioural of entity xil_defaultlib.OutputLayerNeuron [\OutputLayerNeuron(bias=12,weigh...]
+Compiling architecture behavioural of entity xil_defaultlib.OutputLayerNeuron [\OutputLayerNeuron(bias=23,weigh...]
+Compiling architecture behavioural of entity xil_defaultlib.OutputLayerNeuron [\OutputLayerNeuron(bias=41,weigh...]
+Compiling architecture behavioural of entity xil_defaultlib.OutputLayerNeuron [\OutputLayerNeuron(bias=4,weight...]
+Compiling architecture behavioural of entity xil_defaultlib.OutputLayerNeuron [\OutputLayerNeuron(bias=-4,weigh...]
+Compiling architecture behavioural of entity xil_defaultlib.OutputLayerNeuron [\OutputLayerNeuron(bias=4,weight...]
+Compiling architecture behavioural of entity xil_defaultlib.OutputLayerNeuron [\OutputLayerNeuron(bias=-9,weigh...]
+Compiling architecture structural of entity xil_defaultlib.OutputLayer [outputlayer_default]
+Compiling architecture structural of entity xil_defaultlib.Network [network_default]
+Compiling architecture behavioral of entity xil_defaultlib.tb2
+Built simulation snapshot tb2_behav

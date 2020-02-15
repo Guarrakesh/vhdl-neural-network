@@ -1,0 +1,12 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/new/defs.vhd" \
+"../../../../Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/new/HiddenLayer.vhd" \
+"../../../../Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/imports/Desktop/HiddenLayerNeuron.vhd" \
+"../../../../Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/new/Network.vhd" \
+"../../../../Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/new/OutputLayer.vhd" \
+"../../../../Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/imports/Telegram Desktop/OutputLayerNeuron.vhd" \
+"../../../../Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/new/tb2.vhd" \
+
+# Do not sort compile order
+nosort
