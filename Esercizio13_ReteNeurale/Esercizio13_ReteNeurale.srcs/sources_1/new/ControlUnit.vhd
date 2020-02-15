@@ -67,13 +67,15 @@ architecture Behavioral of ControlUnit is
     signal pcNext, pc: unsigned (stateWidth-1 downto 0);
     signal counterCheck, operationCheck, triggerCheck: STD_LOGIC;
     
+    signal temporaryCount: std_logic := '0';
+    
     begin
     
     ROM: MicroRom Port Map (
             PC => pc,
             PC_Next => pcNext,
             reset => reset,
-            count => count,
+            count => temporaryCount,
             counterCheck => counterCheck,
             --operationCheck => operationCheck,
             triggerCheck => triggerCheck,
@@ -122,7 +124,7 @@ architecture Behavioral of ControlUnit is
     
     end process;
     
-    count <= buttonEnable when triggerCheck = '1' else '0';     -- count signal is linked to button signal if triggerCheck equals to '1'. Otherwise is 0
+    count <= buttonEnable when triggerCheck = '1' else temporaryCount;     -- count signal is linked to button signal if triggerCheck equals to '1'. Otherwise is 0
    
 
 end Behavioral;

@@ -66,7 +66,7 @@ architecture Structural of HiddenLayer is
          --   lenght : integer;
             weights : HiddenLayerWeightArray
         );
-        port ( inputArray : in ByteArray;                     -- input 
+        port ( inputArray : in ByteArray;                       -- input 
                outputValue: out unsigned(40 downto 0)           -- output
         );
     end component;
