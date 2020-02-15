@@ -17,6 +17,7 @@ proc create_report { reportName command } {
     send_msg_id runtcl-5 warning "$msg"
   }
 }
+set_param xicom.use_bs_reader 1
 set_param synth.incrementalSynthesisCache ./.Xil/Vivado-4151-ubuntults-VirtualBox/incrSyn
 set_param chipscope.maxJobs 1
 set_msg_config -id {Synth 8-256} -limit 10000
@@ -37,7 +38,6 @@ read_vhdl -library xil_defaultlib {
   /home/ubuntults/Downloads/Esercizio13_ReteNeurale_con_ControlUnit/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/new/defs.vhd
   /home/ubuntults/Downloads/Esercizio13_ReteNeurale_con_ControlUnit/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/new/ControlUnit.vhd
   /home/ubuntults/Downloads/Esercizio13_ReteNeurale_con_ControlUnit/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/new/CounterMod16.vhd
-  /home/ubuntults/Downloads/Esercizio13_ReteNeurale_con_ControlUnit/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/new/DisplayManager.vhd
   /home/ubuntults/Downloads/Esercizio13_ReteNeurale_con_ControlUnit/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/new/HiddenLayer.vhd
   /home/ubuntults/Downloads/Esercizio13_ReteNeurale_con_ControlUnit/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/imports/Desktop/HiddenLayerNeuron.vhd
   /home/ubuntults/Downloads/Esercizio13_ReteNeurale_con_ControlUnit/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/new/InputManager.vhd
@@ -46,7 +46,10 @@ read_vhdl -library xil_defaultlib {
   /home/ubuntults/Downloads/Esercizio13_ReteNeurale_con_ControlUnit/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/new/Network.vhd
   /home/ubuntults/Downloads/Esercizio13_ReteNeurale_con_ControlUnit/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/new/OutputLayer.vhd
   {/home/ubuntults/Downloads/Esercizio13_ReteNeurale_con_ControlUnit/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/imports/Telegram Desktop/OutputLayerNeuron.vhd}
+  /home/ubuntults/Downloads/anodes_manager.vhd
+  /home/ubuntults/Downloads/cathodes_manager.vhd
   /home/ubuntults/Downloads/Esercizio13_ReteNeurale_con_ControlUnit/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/imports/sources_1/new/clock_filter.vhd
+  /home/ubuntults/Downloads/display_seven_segments.vhd
   /home/ubuntults/Downloads/Esercizio13_ReteNeurale_con_ControlUnit/Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.srcs/sources_1/new/NeuralNetworkOnBoard.vhd
 }
 # Mark all dcp files as not used in implementation to prevent them from being

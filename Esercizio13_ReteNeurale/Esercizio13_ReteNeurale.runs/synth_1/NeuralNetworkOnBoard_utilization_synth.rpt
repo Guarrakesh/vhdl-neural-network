@@ -1,7 +1,7 @@
 Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -----------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2019.2 (lin64) Build 2708876 Wed Nov  6 21:39:14 MST 2019
-| Date         : Sat Feb 15 13:04:05 2020
+| Date         : Sat Feb 15 13:41:34 2020
 | Host         : ubuntults-VirtualBox running 64-bit Ubuntu 18.04.4 LTS
 | Command      : report_utilization -file NeuralNetworkOnBoard_utilization_synth.rpt -pb NeuralNetworkOnBoard_utilization_synth.pb
 | Design       : NeuralNetworkOnBoard
@@ -30,11 +30,11 @@ Table of Contents
 +-------------------------+------+-------+-----------+-------+
 |        Site Type        | Used | Fixed | Available | Util% |
 +-------------------------+------+-------+-----------+-------+
-| Slice LUTs*             | 4683 |     0 |     32600 | 14.37 |
-|   LUT as Logic          | 4683 |     0 |     32600 | 14.37 |
+| Slice LUTs*             | 4700 |     0 |     32600 | 14.42 |
+|   LUT as Logic          | 4700 |     0 |     32600 | 14.42 |
 |   LUT as Memory         |    0 |     0 |      9600 |  0.00 |
-| Slice Registers         |    3 |     0 |     65200 | <0.01 |
-|   Register as Flip Flop |    0 |     0 |     65200 |  0.00 |
+| Slice Registers         |   21 |     0 |     65200 |  0.03 |
+|   Register as Flip Flop |   18 |     0 |     65200 |  0.03 |
 |   Register as Latch     |    3 |     0 |     65200 | <0.01 |
 | F7 Muxes                |    0 |     0 |     16300 |  0.00 |
 | F8 Muxes                |    0 |     0 |      8150 |  0.00 |
@@ -55,7 +55,7 @@ Table of Contents
 | 0     |            _ |       Reset |            - |
 | 0     |          Yes |           - |            - |
 | 0     |          Yes |           - |          Set |
-| 3     |          Yes |           - |        Reset |
+| 21    |          Yes |           - |        Reset |
 | 0     |          Yes |         Set |            - |
 | 0     |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
@@ -91,7 +91,7 @@ Table of Contents
 +-----------------------------+------+-------+-----------+-------+
 |          Site Type          | Used | Fixed | Available | Util% |
 +-----------------------------+------+-------+-----------+-------+
-| Bonded IOB                  |   16 |     0 |       210 |  7.62 |
+| Bonded IOB                  |   18 |     0 |       210 |  8.57 |
 | Bonded IPADs                |    0 |     0 |         2 |  0.00 |
 | PHY_CONTROL                 |    0 |     0 |         5 |  0.00 |
 | PHASER_REF                  |    0 |     0 |         5 |  0.00 |
@@ -113,7 +113,7 @@ Table of Contents
 +------------+------+-------+-----------+-------+
 |  Site Type | Used | Fixed | Available | Util% |
 +------------+------+-------+-----------+-------+
-| BUFGCTRL   |    0 |     0 |        32 |  0.00 |
+| BUFGCTRL   |    1 |     0 |        32 |  3.13 |
 | BUFIO      |    0 |     0 |        20 |  0.00 |
 | MMCME2_ADV |    0 |     0 |         5 |  0.00 |
 | PLLE2_ADV  |    0 |     0 |         5 |  0.00 |
@@ -147,25 +147,30 @@ Table of Contents
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| LUT2     | 1810 |                 LUT |
-| CARRY4   | 1483 |          CarryLogic |
-| LUT3     | 1400 |                 LUT |
-| LUT6     | 1053 |                 LUT |
-| LUT4     |  988 |                 LUT |
-| LUT5     |  873 |                 LUT |
-| LUT1     |  251 |                 LUT |
+| LUT2     | 1826 |                 LUT |
+| CARRY4   | 1487 |          CarryLogic |
+| LUT3     | 1393 |                 LUT |
+| LUT6     | 1061 |                 LUT |
+| LUT4     |  989 |                 LUT |
+| LUT5     |  875 |                 LUT |
+| LUT1     |  254 |                 LUT |
 | DSP48E1  |   45 |    Block Arithmetic |
+| FDCE     |   18 |        Flop & Latch |
 | OBUF     |   16 |                  IO |
 | LDCE     |    3 |        Flop & Latch |
+| IBUF     |    2 |                  IO |
+| BUFG     |    1 |               Clock |
 +----------+------+---------------------+
 
 
 8. Black Boxes
 --------------
 
-+----------+------+
-| Ref Name | Used |
-+----------+------+
++--------------+------+
+|   Ref Name   | Used |
++--------------+------+
+| counter_mod8 |    1 |
++--------------+------+
 
 
 9. Instantiated Netlists

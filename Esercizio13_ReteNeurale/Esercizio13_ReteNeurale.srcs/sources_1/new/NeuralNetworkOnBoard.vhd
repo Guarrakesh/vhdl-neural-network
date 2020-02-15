@@ -69,13 +69,27 @@ architecture Behavioral of NeuralNetworkOnBoard is
                counter : out  STD_LOGIC_VECTOR (3 downto 0));
     end component;
     
-    component DisplayManager is
-        Port (
-            enable : in std_logic; 
-            input : in std_logic_vector(2 downto 0);
-            anodes : out  STD_LOGIC_VECTOR (7 downto 0);
-            cathodes : out  STD_LOGIC_VECTOR (7 downto 0)
-        );
+--    component DisplayManager is
+--        Port (
+--            enable : in std_logic; 
+--            input : in std_logic_vector(2 downto 0);
+--            anodes : out  STD_LOGIC_VECTOR (7 downto 0);
+--            cathodes : out  STD_LOGIC_VECTOR (7 downto 0)
+--        );
+--    end component;
+    
+    component display_seven_segments is
+	Generic( 
+				clock_frequency_in : integer := 100000000; --parametri da customizzare, questo � il valore di default
+				clock_frequency_out : integer := 1000000
+				);
+    Port ( clock : in  STD_LOGIC;
+           reset_n : in  STD_LOGIC;
+           value : in  STD_LOGIC_VECTOR (31 downto 0);
+           enable : in  STD_LOGIC_VECTOR (7 downto 0);
+           dots : in  STD_LOGIC_VECTOR (7 downto 0);
+           anodes : out  STD_LOGIC_VECTOR (7 downto 0);
+           cathodes : out  STD_LOGIC_VECTOR (7 downto 0));
     end component;
     
     component InputManager is
@@ -105,7 +119,7 @@ architecture Behavioral of NeuralNetworkOnBoard is
     				);
         Port ( clock_in : in  STD_LOGIC;
     		   reset : in STD_LOGIC;
-               --clockOutDisplay : out  STD_LOGIC;
+               clockOutDisplay : out  STD_LOGIC;
                clockOutComponents : out std_logic
                );
 
@@ -120,7 +134,7 @@ architecture Behavioral of NeuralNetworkOnBoard is
     
     
     -- internal signals for clock
-    --signal clockDisplay: std_logic := '0';
+    signal clockDisplay: std_logic := '0';
     signal clockComponents: std_logic := '0';
     
     -- internal signals for inputManager
@@ -137,9 +151,16 @@ architecture Behavioral of NeuralNetworkOnBoard is
     
     signal internalOutputIndex: std_logic_vector(2 downto 0) := (others => '0');
     
+    signal notReset: std_logic := '0';
+    signal valueForDisplay: std_logic_vector(31 downto 0);
+    signal enableForDisplay: std_logic_vector(7 downto 0);
 
     
 begin
+
+    notReset <= not reset;
+    valueForDisplay <= "00000000000000000000000000000" & internalOutputIndex;
+    enableForDisplay <= "0000000" & internalDisplayEnabler;
 
     clockFilter: clock_filter generic map (
         clock_frequency_in => 100000000,
@@ -149,7 +170,7 @@ begin
     port map (
         clock_in => clock,
         reset => reset,
-        --clockOutDisplay => clockDisplay,
+        clockOutDisplay => clockDisplay,
         clockOutComponents => clockComponents
     );
     
@@ -202,13 +223,29 @@ begin
             output => internalOutputIndex
      );
      
-     displayManagerComponent: DisplayManager
-        Port map (
-            enable => internalDisplayEnabler,
-            input => internalOutputIndex,
-            anodes => anodes,
-            cathodes => cathodes
-        );
+--     displayManagerComponent: DisplayManager
+--        Port map (
+--            enable => internalDisplayEnabler,
+--            input => internalOutputIndex,
+--            anodes => anodes,
+--            cathodes => cathodes
+--        );
+
+    displayManagerComponent: display_seven_segments
+	Generic map ( 
+				clock_frequency_in => 100000000, --parametri da customizzare, questo � il valore di default
+				clock_frequency_out => 1000
+				)
+    Port map ( clock => clockDisplay,
+               reset_n => notReset,
+               value => valueForDisplay,
+                enable => enableForDisplay,
+                dots => (others => '0'),
+                anodes => anodes,
+                cathodes => cathodes
+           );
+
+
       
       
     
