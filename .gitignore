@@ -2,7 +2,8 @@ Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.cache
 Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.hw
 Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.ip_user_files
 Esercizio13_ReteNeurale/Esercizio13_ReteNeurale.runs
--rw-rw-r-- 1 ubuntults ubuntults  1815 feb 13 23:03 vivado.jou
--rw-rw-r-- 1 ubuntults ubuntults 27061 feb 13 23:55 vivado.log
-drwxrwxr-x 2 ubuntults ubuntults  4096 feb 13 23:55 .Xil
+Esercizio13_ReteNeurale/*.jou
+Esercizio13_ReteNeurale/*.log
+Esercizio13_ReteNeurale/.Xil
+Esercizio13_ReteNeurale/*.str
 

@@ -158,6 +158,12 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PPRDIR/../../counter_mod8.vhd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PSRCDIR/sources_1/imports/Downloads/display_seven_segments.vhd">
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../../display_seven_segments.vhd"/>
