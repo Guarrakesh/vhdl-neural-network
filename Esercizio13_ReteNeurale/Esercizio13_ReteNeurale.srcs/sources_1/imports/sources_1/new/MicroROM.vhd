@@ -118,6 +118,8 @@ architecture Behavioural of MicroROM is
         reset <= control.reset;
         triggerCheck <= control.triggerCheck;
         counterCheck <= control.counterCheck;
+        count <= control.count;
+        enableNetwork <= control.enableNetwork;
         --operationCheck <= control.operationCheck;
         terminate <= control.terminate;
 
