@@ -44,7 +44,8 @@ entity ControlUnit is
     reset          : out std_logic;            -- Reset
     count          : out std_logic;            -- Count signal
     enableNetwork  : out std_logic;            -- Bit triggers neural network calculation
-    terminate      : out std_logic             -- Bit high when max value is calculated and cycle is finished (can enable display or LED)
+    terminate      : out std_logic;             -- Bit high when max value is calculated and cycle is finished (can enable display or LED)
+    pc_out         : out unsigned (stateWidth-1 downto 0)
    );
 end ControlUnit;
 
@@ -94,7 +95,7 @@ architecture Behavioral of ControlUnit is
             pc <= pcNext;
         else
             if (counter = "1001") then      -- if counterCheck = '1' check counter value. If 9, all inputs are loaded, next state is set to Operation (100)
-                pc <= "100";
+                pc <= "011";
             else
                 pc <= pcNext;
             end if;
@@ -123,7 +124,7 @@ architecture Behavioral of ControlUnit is
     end if;
     
     end process;
-    
+    pc_out <= pc;
     count <= buttonEnable when triggerCheck = '1' else temporaryCount;     -- count signal is linked to button signal if triggerCheck equals to '1'. Otherwise is 0
    
 

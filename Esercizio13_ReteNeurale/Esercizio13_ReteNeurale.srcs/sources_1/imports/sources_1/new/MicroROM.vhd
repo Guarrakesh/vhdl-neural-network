@@ -48,7 +48,7 @@ architecture Behavioural of MicroROM is
         --operationCheck => '0',
         triggerCheck   => '0',                  
         enableNetwork  => '0',
-        terminate      => '1'
+        terminate      => '0'
     );
     
      constant Start: ControlType := (             -- Start: temporary state, resets all components

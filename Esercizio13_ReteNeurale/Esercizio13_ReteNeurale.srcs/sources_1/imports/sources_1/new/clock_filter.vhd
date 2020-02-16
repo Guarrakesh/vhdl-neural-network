@@ -33,7 +33,7 @@ entity clock_filter is
 	 generic(
 				clock_frequency_in : integer := 100000000;
 				clock_frequency_out_debouncing : integer := 100;
-				clock_frequency_out_components : integer := 1
+				clock_frequency_out_components : integer := 10000
 				);
     Port ( clock_in : in  STD_LOGIC;
 		   reset : in STD_LOGIC;
@@ -85,11 +85,13 @@ begin
 		counter := 0;
 		clockfxComponents <= '0';
 	elsif clock_in'event and clock_in = '1' then
-		if counter = count_max_value_components then
+	    if counter = count_max_value_components / 2 then
 			clockfxComponents <=  '1';
+			counter := counter + 1;
+		elsif counter = count_max_value_components then
+			clockfxComponents <=  '0';
 			counter := 0;
 		else
-			clockfxComponents <= '0';
 			counter := counter + 1;
 		end if;
 	end if;
