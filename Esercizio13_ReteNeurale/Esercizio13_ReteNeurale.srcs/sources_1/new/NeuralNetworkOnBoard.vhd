@@ -42,7 +42,8 @@ entity NeuralNetworkOnBoard is
         buttonEnable: in std_logic;
         input: in std_logic_vector(7 downto 0);
         anodes : out  STD_LOGIC_VECTOR (7 downto 0);
-        cathodes : out  STD_LOGIC_VECTOR (7 downto 0)
+        cathodes : out  STD_LOGIC_VECTOR (7 downto 0);
+        pc_out         : out unsigned (stateWidth-1 downto 0)
    );
 end NeuralNetworkOnBoard;
 
@@ -58,7 +59,8 @@ architecture Behavioral of NeuralNetworkOnBoard is
         reset          : out std_logic;            -- Reset
         count          : out std_logic;            -- Count signal
         enableNetwork  : out std_logic;            -- Bit triggers neural network calculation
-        terminate      : out std_logic             -- Bit high when max value is calculated and cycle is finished (can enable display or LED)
+        terminate      : out std_logic;             -- Bit high when max value is calculated and cycle is finished (can enable display or LED)
+        pc_out         : out unsigned (stateWidth-1 downto 0)
        );
     end component;
     
@@ -71,6 +73,8 @@ architecture Behavioral of NeuralNetworkOnBoard is
     
     component DisplayManager is
         Port (
+            reset: in std_logic;
+            clk: in std_logic;
             enable : in std_logic; 
             input : in std_logic_vector(2 downto 0);
             anodes : out  STD_LOGIC_VECTOR (7 downto 0);
@@ -96,9 +100,9 @@ architecture Behavioral of NeuralNetworkOnBoard is
         Port (
               clock: in std_logic;
               reset: in std_logic; 
-              buttonEnable: in std_logic;                   -- Enabled for each input
+              --buttonEnable: in std_logic;                   -- Enabled for each input
               enableNetwork: in std_logic;                  -- Enabled when all input are loaded
-              countValue: in std_logic_vector(3 downto 0);  -- CounterValue to access input index
+              count_in: in std_logic;                       -- CounterValue to access input index
               input: in std_logic_vector(7 downto 0);       -- Actual input
               networkInput: out ByteArray                   -- Array to be sent to Neural Network
         );
@@ -115,7 +119,7 @@ architecture Behavioral of NeuralNetworkOnBoard is
     	 generic(
     				clock_frequency_in : integer := 100000000;
     				clock_frequency_out_debouncing : integer := 100;
-    				clock_frequency_out_components : integer := 1
+    				clock_frequency_out_components : integer := 10000
     				);
         Port ( clock_in : in  STD_LOGIC;
     		   reset : in STD_LOGIC;
@@ -177,7 +181,7 @@ begin
     )
     port map (
         clock_in => clock,
-        reset => reset,
+        reset => '0',
         clockOutDebouncing => clockDebouncing,
         clockOutComponents => clockComponents
     );
@@ -186,7 +190,7 @@ begin
         Port map ( 
             button => buttonEnable,
             clk => clockDebouncing,
-            reset => internalReset,
+            reset => '0',
             button_result => internalButton
      );
      
@@ -201,9 +205,9 @@ begin
         Port map (
               clock => clockComponents,
               reset => internalReset, 
-              buttonEnable => internalButtonFixed,                         -- Enabled for each input
+              --buttonEnable => internalButtonFixed,                         -- Enabled for each input
               enableNetwork => internalEnableNetwork,                 -- Enabled when all input are loaded
-              countValue => internalCountValue,                        -- CounterValue to access input index
+              count_in => internalCount,                        -- CounterValue to access input index
               input => input,                                           -- Actual input
               networkInput => internalNetworkInput                   -- Array to be sent to Neural Network
         );
@@ -227,7 +231,8 @@ begin
             reset => internalReset,                     -- Reset
             count => internalCount,                     -- Count signal
             enableNetwork => internalEnableNetwork,     -- Bit triggers neural network calculation
-            terminate => internalDisplayEnabler         -- Bit high when max value is calculated and cycle is finished (can enable display or LED)
+            terminate => internalDisplayEnabler,        -- Bit high when max value is calculated and cycle is finished (can enable display or LED)
+            pc_out => pc_out
        );
        
        
@@ -246,6 +251,8 @@ begin
      
      displayManagerComponent: DisplayManager
         Port map (
+            reset => internalReset,
+            clk => clockComponents,
             enable => internalDisplayEnabler,
             input => internalOutputIndex,
             anodes => anodes,

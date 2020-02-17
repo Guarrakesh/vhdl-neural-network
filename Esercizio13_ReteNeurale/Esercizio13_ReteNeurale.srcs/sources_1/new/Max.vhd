@@ -43,28 +43,31 @@ entity Max is
 end Max;
 
 architecture Behavioral of Max is
-
+    signal currentMaxIndexDef: integer range 0 to 6 := 0;
 begin
 
     calculateMax: process(input)
         
-        variable currentMaxIndex: integer range 0 to 7 := 0;
+        variable currentMaxIndex: integer range 0 to 6 := 0;
         variable currentMax: unsigned(73 downto 0) := (others => '0');
         
         begin
         
         currentMax := input(0);
+        currentMaxIndex := 0;
         
-        for i in 0 to 6 loop
+        for i in 1 to 6 loop
             if (input(i) > currentMax) then
                 currentMax := input(i);
-                currentMaxIndex := i + 1;
+                currentMaxIndex := i;
             end if;
         end loop;
         
-        output <= conv_std_logic_vector(currentMaxIndex, 3);
+        currentMaxIndexDef <= currentMaxIndex + 1;
         
-        end process;
-
+        
+        
+    end process;
+    output <= conv_std_logic_vector(currentMaxIndexDef, 3);
 
 end Behavioral;

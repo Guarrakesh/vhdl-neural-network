@@ -38,9 +38,9 @@ entity InputManager is
     Port (
           clock: in std_logic;
           reset: in std_logic; 
-          buttonEnable: in std_logic;                   -- Enabled for each input
+          --buttonEnable: in std_logic;                   -- Enabled for each input
           enableNetwork: in std_logic;                  -- Enabled when all input are loaded
-          countValue: in std_logic_vector(3 downto 0);  -- CounterValue to access input index
+          count_in: in std_logic;  -- CounterValue to access input index
           input: in std_logic_vector(7 downto 0);       -- Actual input
           networkInput: out ByteArray                   -- Array to be sent to Neural Network
     );
@@ -53,14 +53,16 @@ signal internalInputArray : ByteArray := (others => (others =>'0'));
 begin
 
     main: process(clock)
-    
+        variable counter: integer range 0 to 9 := 0;
     begin
-
 	   if clock'event and clock = '1' then
 	   	   if reset = '1' then
 	           internalInputArray <= (others => (others =>'0'));                   -- reset all
-	       elsif buttonEnable = '1' then           
-	           internalInputArray(conv_integer(unsigned(countValue))) <= input;    -- assign input to index specified by counter
+	           networkInput <= (others => (others =>'0'));
+	           counter := 0;
+	       elsif count_in = '1' then           
+	           internalInputArray(counter) <= input;    -- assign input to index specified by counter
+	           counter := counter + 1;
 	       elsif enableNetwork = '1' then                                          -- enableNetwork is high when all input are loaded, specified into Control Unit
 	           networkInput <= internalInputArray;                                 -- Send inputs to Neural Network
 	       end if; 

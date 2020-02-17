@@ -75,8 +75,10 @@ begin
         --test 23
          input <= (conv_std_logic_vector(203,8), conv_std_logic_vector(124,8), conv_std_logic_vector(173,8), conv_std_logic_vector(129,8), conv_std_logic_vector(105,8), conv_std_logic_vector(131,8),conv_std_logic_vector(82,8), 
                   conv_std_logic_vector(160,8), conv_std_logic_vector(161,8));   
-           --27*59+112*9=2601
-        
+--           27*59+112*9=2601
+        --TEST SCHEDA
+--        input <= (conv_std_logic_vector(127,8), conv_std_logic_vector(127,8), conv_std_logic_vector(127,8), conv_std_logic_vector(127,8), conv_std_logic_vector(127,8), conv_std_logic_vector(127,8),conv_std_logic_vector(127,8), 
+--                  conv_std_logic_vector(127,8), conv_std_logic_vector(127,8));
         wait for 5 ns;
         --1593-5750+1008+1935-1320-4323+2500+4920-3875-8=3320
         

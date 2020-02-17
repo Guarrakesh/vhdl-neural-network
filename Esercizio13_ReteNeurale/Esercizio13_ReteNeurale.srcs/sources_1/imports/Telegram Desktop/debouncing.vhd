@@ -58,7 +58,5 @@ begin
                        reset => reset,
                        Q => button_result
                        );            
-    
-    signal_n_reset <= not reset; 
  
  end Structural;

@@ -33,7 +33,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity DisplayManager is
     Port (
-        enable : in std_logic; 
+        enable : in std_logic;
+        reset: in std_logic; 
+        clk: in std_logic;
         input : in std_logic_vector(2 downto 0);
         anodes : out  STD_LOGIC_VECTOR (7 downto 0);
         cathodes : out  STD_LOGIC_VECTOR (7 downto 0)
@@ -61,19 +63,45 @@ architecture rtl of DisplayManager is
 
 begin
 
-
-    anodes <= first_digit_enabled when enable = '1' else "11111111";
+    display_p: process(clk)
+        variable enabled: std_logic := '0';
+    begin
+        if(clk'event and clk ='1') then
+            if reset = '1' then
+                anodes <= "11111111";
+                enabled := '0';
+            elsif enable = '1' then
+                anodes <= first_digit_enabled;
+                enabled := '1';
+            elsif enabled = '0' then
+                anodes <= "11111111";
+            end if;
+            
+            case input is
+                when "000" =>
+                    cathodes <= zero;
+                when "001" =>
+                    cathodes <= one;
+                when "010" =>
+                    cathodes <= two;
+                when "011" =>
+                    cathodes <= three;
+                when "100" =>
+                    cathodes <= four;
+                when "101" =>
+                    cathodes <= five;
+                when "110" =>
+                    cathodes <= six;
+                when "111" =>
+                    cathodes <= seven;
+                when others =>
+                    cathodes <= error;  
+            end case;
+        end if;
     
-    with input select
-        cathodes <= zero    when "000",
-                    one     when "001",
-                    two     when "010",
-                    three   when "011",
-                    four    when "100",
-                    five    when "101",
-                    six     when "110",
-                    seven   when "111",
-
-                    error   when others;
+    
+    
+    end process;
+    
  
 end rtl;
